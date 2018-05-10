@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="modelo.xhtml">
+
+	<f:metadata>
+		<f:event type="postAddToView" listener="#{motoMB.lerMoto}" />
+	</f:metadata>
+
+	<ui:define name="titulo">#{msg.tituloEditarMot}</ui:define>
+
+	<ui:define name="conteudo">
+					<h:inputHidden id="codigo" value="#{motoMB.moto.codigo}" />
+		<p:panelGrid columns="2">
+		
+			<h:outputText value="#{msg.campoCodigo}:" />
+			<h:outputText value="#{motoMB.moto.codigo}" />
+
+			<ui:remove>
+				<p:outputLabel for="vendedor" value="#{msg.campoVendedor}:" />
+				<h:panelGroup>
+					<p:inputText id="vendedor" value="#{motoMB.moto.vendedor}"
+						converter="vend-converter" required="true" size="5" maxlength="5">
+						<f:ajax event="blur" execute="@this" render="nomeVend" />
+					</p:inputText>
+					<h:outputText id="nomeVend"
+						value=" - #{motoMB.moto.vendedor.nome}" />
+				</h:panelGroup>
+			</ui:remove>
+			
+			<p:outputLabel for="vendedor" value="#{msg.campoVendedor}:" />
+			<p:selectOneMenu id="vendedor"
+				value="#{motoMB.moto.vendedor}" required="true"
+				converter="vend-converter">
+				<f:selectItem itemLabel="#{msg.campoSelecione}" itemValue="" />
+				<f:selectItems value="#{motoMB.vendedores}" var="vend"
+					itemLabel="#{vend.nome}"></f:selectItems>
+			</p:selectOneMenu>
+
+			<p:outputLabel for="modelo" value="#{msg.campoModelo}:" />
+			<h:panelGroup>
+			<p:inputText id="modelo" value="#{motoMB.moto.modelo}"
+				binding="#{motoMB.campoModelo}" required="true">
+				<f:ajax event="keyup" execute="@this" render="contarLetras modelo"/>
+			</p:inputText>
+			<h:outputText id="contarLetras" value=" letras: #{motoMB.contador}" />
+				<p:message for="modelo" />
+			</h:panelGroup>
+
+			<p:outputLabel for="custo" value="#{msg.campoCusto}:" />
+			<p:inputText id="custo" value="#{motoMB.moto.precoCusto}"
+				required="true">
+				<f:validateDoubleRange minimum="0.01"/>
+				<f:convertNumber pattern="###,###,##0.00" />
+			</p:inputText>
+
+			<p:outputLabel for="venda" value="#{msg.campoVenda}:" />
+			<p:inputText id="venda" value="#{motoMB.moto.precoVenda}"
+				required="true">
+				<f:validateDoubleRange minimum="0.01"/>
+				<f:convertNumber pattern="###,###,##0.00" />
+			</p:inputText>
+
+			<p:outputLabel for="qtd" value="#{msg.campoEstoque}:" />
+			<p:inputText id="qtd" value="#{motoMB.moto.qtdEstoque}"
+				required="true">
+				<f:validateLongRange minimum="1"/>
+			</p:inputText>
+
+			<h:outputText value="#{msg.campoFoto}:" />
+			<p:fileUpload value="#{motoMB.uploadedFile}" mode="simple"
+				fileLimit="1" multiple="false" allowTypes="/(\.|\/)(jpeg|jpg)$/"
+				invalidFileMessage="São permitidas somente imagens (jpeg e jpg)" />
+
+			<h:outputText value="" />
+			<h:panelGroup>
+				<p:commandButton ajax="false" value="#{msg.botaoSalvar}" action="#{motoMB.acaoSalvar}"></p:commandButton>
+				-
+				<p:commandButton ajax="false" value="#{msg.botaoCancelar}" action="#{motoMB.acaoCancelar}"
+					immediate="true"></p:commandButton>
+			</h:panelGroup>
+		</p:panelGrid>
+
+	</ui:define>
+
+</ui:composition>
+</html>

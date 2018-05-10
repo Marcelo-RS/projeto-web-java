@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="modelo.xhtml">
+
+	<ui:define name="titulo">#{msg.tituloMotos}</ui:define>
+
+	<ui:define name="opcoesMenu">
+		<p:commandButton ajax="false" type="push" value="#{msg.linkNovo}"
+			action="#{motoMB.acaoAbrirInclusao}" immediate="true"
+			image="ui-icon-document" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<p:panel>
+			<p:panelGrid columns="2">
+				<p:outputLabel for="vendedor" value="#{msg.campoFiltrarVend}:" />
+				<p:selectOneMenu id="vendedor" value="#{motoMB.filtroVendedor}"
+					required="false" converter="vend-converter">
+					<f:selectItem itemLabel="#{msg.campoSelecione}" itemValue="" />
+					<f:selectItems value="#{motoMB.vendedores}" var="vend"
+						itemLabel="#{vend.nome}"></f:selectItems>
+				</p:selectOneMenu>
+
+				<p:outputLabel for="modelo" value="#{msg.campoFiltrarMod}:" />
+				<p:inputText id="modelo" value="#{motoMB.filtroModelo}"
+					required="false">
+				</p:inputText>
+
+				<h:outputText value="" />
+				<p:commandButton ajax="true" process="@form" update="tabela"
+					value="#{msg.botaoPesquisar}" action="#{motoMB.acaoPesquisar}" />
+
+			</p:panelGrid>
+		</p:panel>
+
+		<p:dataTable id="tabela" value="#{motoMB.motos}" var="mot"
+			rowHover="true">
+
+			<p:column headerText="#{msg.campoOpcoes}">
+				<p:panelGrid columns="1">
+					<p:commandLink ajax="false" value="#{msg.linkAlterar}"
+						action="#{motoMB.acaoAbrirAlteracao(mot.codigo)}" />
+					<p:commandLink ajax="false" value="#{msg.linkExcluir}"
+						action="#{motoMB.acaoExcluir(mot.codigo)}" />
+				</p:panelGrid>
+			</p:column>
+
+			<p:column headerText="#{msg.campoCodigo}">
+				<h:outputText value="#{mot.codigo}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoModelo}">
+				<h:outputText value="#{mot.modelo}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoVendedor}">
+				<h:outputText value="#{mot.vendedor.nome}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoCusto}">
+				<h:outputText value="#{mot.precoCusto}">
+					<f:convertNumber pattern="###,###,##0.00" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoVenda}">
+				<h:outputText value="#{mot.precoVenda}">
+					<f:convertNumber pattern="###,###,##0.00" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoEstoque}">
+				<h:outputText value="#{mot.qtdEstoque}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{msg.campoFoto}">
+				<h:graphicImage url="foto.jsf?codigo=#{mot.codigo}" width="100"
+					height="100" />
+			</p:column>
+			
+		</p:dataTable>
+
+	</ui:define>
+
+</ui:composition>
+</html>
